@@ -45,6 +45,8 @@
   .pill.over { background: #E8ECF5; color: #1B3A6B; }
   .footnote { font-size: 11px; color: #6E7882; margin-top: 20px; line-height: 1.5; font-style: italic; }
   .center-name { font-weight: 600; }
+  #rank-table td, #rank-table th { text-align: center; white-space: nowrap; }
+  #rank-table td.center-name, #rank-table th.center-col { text-align: left; }
 </style>
 </head>
 <body>
@@ -84,10 +86,23 @@
   </table>
 </div>
 
+<div class="section-title">Rank Breakdown by Center</div>
+<div class="card-wrap">
+  <table id="rank-table">
+    <thead>
+      <tr id="rank-thead-row">
+        <th class="center-col">Center</th>
+      </tr>
+    </thead>
+    <tbody id="rank-tbody"></tbody>
+  </table>
+</div>
+
 <div class="footnote">
   Occupancy is sourced from each center's ground-truth bed census (room-by-room, updated near-daily), not from the summary metrics workbook. It counts anyone physically sleeping in a center bed &mdash; numbered rooms plus any cot/chapel overflow &mdash; against that center's fixed center-only capacity, regardless of whether the occupant is a resident, staff member, or graduate. Grad House and Staff House beds are excluded entirely, even for a genuine program resident temporarily overflowing into one of them, because those aren't center beds. Occupancy over 100% is possible (cot/chapel overflow) and shown as-is, not capped.
   Staff/Grad Beds shows how many of the occupied center beds (from the figure above) are held by staff or graduates rather than active program residents (Bootcamp/Recruit/Recharge/E-1&ndash;E-9) &mdash; this can be a large share at some centers and is worth watching alongside the raw occupancy number.
-  Known gap: at centers where real residents overflow into Staff House, those beds aren't counted anywhere in this table (not in Occupancy, not in Staff/Grad Beds) since Staff House sits outside the tracked center capacity entirely.
+  Rank Breakdown shows the same occupied population split out by exact rank, from the same daily bed census source.
+  Known gap: at centers where real residents overflow into Staff House, those beds aren't counted anywhere in this table (not in Occupancy, not in Staff/Grad Beds, not in Rank Breakdown) since Staff House sits outside the tracked center capacity entirely.
   Avg LOS restricted to residents with Entry Date on or after 1/1/25 (when client-level tracking began).
   Bootcamp completion = non-recharge residents with Entry Date this year, excluding the most recent 30 days as a maturity buffer.
   Recharge % is a separate metric from the summary metrics workbook (current Recharge count &divide; current core-program count), not derived from the bed census.
@@ -100,7 +115,7 @@
   "snapshots": [
     {
       "date": "2026-07-07",
-      "generated_at": "2026-07-07T12:07:12.389308",
+      "generated_at": "2026-07-07T13:21:28.427336",
       "centers": {
         "Memphis": {
           "as_of_date": "2026-07-05",
@@ -109,6 +124,23 @@
           "occupancy_pct": 98.6,
           "staff_grad_beds": 6,
           "program_residents": 62,
+          "rank_counts": {
+            "Bootcamp": 10,
+            "Recruit": 12,
+            "Recharge": 7,
+            "E-1": 8,
+            "E-2": 4,
+            "E-3": 2,
+            "E-4": 0,
+            "E-5": 7,
+            "E-6": 4,
+            "E-7": 4,
+            "E-8": 2,
+            "E-9": 2,
+            "Graduate": 2,
+            "Help Staff": 4,
+            "Executive Staff": 0
+          },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 126,
           "ytd_departures": 114,
@@ -133,6 +165,23 @@
           "occupancy_pct": 88.1,
           "staff_grad_beds": 26,
           "program_residents": 33,
+          "rank_counts": {
+            "Bootcamp": 8,
+            "Recruit": 5,
+            "Recharge": 1,
+            "E-1": 4,
+            "E-2": 8,
+            "E-3": 1,
+            "E-4": 3,
+            "E-5": 0,
+            "E-6": 1,
+            "E-7": 1,
+            "E-8": 1,
+            "E-9": 0,
+            "Graduate": 16,
+            "Help Staff": 8,
+            "Executive Staff": 2
+          },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 83,
           "ytd_departures": 83,
@@ -157,6 +206,23 @@
           "occupancy_pct": 88.5,
           "staff_grad_beds": 4,
           "program_residents": 19,
+          "rank_counts": {
+            "Bootcamp": 5,
+            "Recruit": 2,
+            "Recharge": 2,
+            "E-1": 4,
+            "E-2": 2,
+            "E-3": 1,
+            "E-4": 1,
+            "E-5": 1,
+            "E-6": 1,
+            "E-7": 0,
+            "E-8": 0,
+            "E-9": 0,
+            "Graduate": 0,
+            "Help Staff": 4,
+            "Executive Staff": 0
+          },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 38,
           "ytd_departures": 33,
@@ -181,6 +247,23 @@
           "occupancy_pct": 94.1,
           "staff_grad_beds": 6,
           "program_residents": 10,
+          "rank_counts": {
+            "Bootcamp": 1,
+            "Recruit": 0,
+            "Recharge": 3,
+            "E-1": 1,
+            "E-2": 2,
+            "E-3": 0,
+            "E-4": 0,
+            "E-5": 1,
+            "E-6": 0,
+            "E-7": 2,
+            "E-8": 0,
+            "E-9": 0,
+            "Graduate": 0,
+            "Help Staff": 4,
+            "Executive Staff": 2
+          },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 15,
           "ytd_departures": 12,
@@ -205,6 +288,23 @@
           "occupancy_pct": 83.3,
           "staff_grad_beds": 9,
           "program_residents": 6,
+          "rank_counts": {
+            "Bootcamp": 3,
+            "Recruit": 0,
+            "Recharge": 0,
+            "E-1": 0,
+            "E-2": 1,
+            "E-3": 0,
+            "E-4": 0,
+            "E-5": 2,
+            "E-6": 0,
+            "E-7": 0,
+            "E-8": 0,
+            "E-9": 0,
+            "Graduate": 0,
+            "Help Staff": 5,
+            "Executive Staff": 4
+          },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 15,
           "ytd_departures": 22,
@@ -229,6 +329,23 @@
         "total_beds": 197,
         "staff_grad_beds": 51,
         "program_residents": 130,
+        "rank_counts": {
+          "Bootcamp": 27,
+          "Recruit": 19,
+          "Recharge": 13,
+          "E-1": 17,
+          "E-2": 17,
+          "E-3": 4,
+          "E-4": 4,
+          "E-5": 11,
+          "E-6": 6,
+          "E-7": 7,
+          "E-8": 3,
+          "E-9": 2,
+          "Graduate": 18,
+          "Help Staff": 25,
+          "Executive Staff": 8
+        },
         "ytd_arrivals": 277,
         "ytd_departures": 264,
         "ytd_net": 13,
@@ -251,6 +368,8 @@
 </script>
 
 <script>
+var RANK_ORDER = ['Bootcamp','Recruit','Recharge','E-1','E-2','E-3','E-4','E-5','E-6','E-7','E-8','E-9','Graduate','Help Staff','Executive Staff'];
+
 function fmtDelta(curr, prev, opts) {
   opts = opts || {};
   if (prev === null || prev === undefined || curr === null || curr === undefined) {
@@ -363,6 +482,21 @@ function render() {
     '<td>' + sys.graduates_since_1_1_25 + '</td>' +
     '</tr>';
   document.getElementById('center-tbody').innerHTML = rows + sysRow;
+
+  // Rank breakdown table
+  var rankHeadRow = document.getElementById('rank-thead-row');
+  rankHeadRow.innerHTML = '<th class="center-col">Center</th>' + RANK_ORDER.map(function(r) { return '<th>' + r + '</th>'; }).join('');
+  var rankRows = order.map(function(name) {
+    var c = centers[name];
+    if (!c || !c.rank_counts) return '';
+    return '<tr><td class="center-name">' + name + '</td>' +
+      RANK_ORDER.map(function(r) { return '<td>' + (c.rank_counts[r] || 0) + '</td>'; }).join('') +
+      '</tr>';
+  }).join('');
+  var rankSysRow = '<tr class="total-row"><td class="center-name">TOTAL (system)</td>' +
+    RANK_ORDER.map(function(r) { return '<td>' + (sys.rank_counts ? (sys.rank_counts[r] || 0) : 0) + '</td>'; }).join('') +
+    '</tr>';
+  document.getElementById('rank-tbody').innerHTML = rankRows + rankSysRow;
 
   if (window.Chart) {
     order.forEach(function(name) {
