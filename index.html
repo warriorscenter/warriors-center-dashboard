@@ -2,6 +2,24 @@
 <html>
 <head>
 <meta charset="utf-8">
+<script>
+(function() {
+  // Cache-busting bootstrap: runs first, before anything else loads.
+  // Forces one fresh network fetch per calendar day (by the phone's own
+  // local clock), regardless of what GitHub Pages' or the browser's
+  // caching does, and regardless of what URL variant got saved to a home
+  // screen icon. Self-healing every day - nobody ever needs to update a
+  // saved link. Preserves any #anchor (e.g. bedcensus.html#Memphis) across
+  // the redirect. Added 2026-07-08.
+  var d = new Date();
+  var today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('d') !== today) {
+    params.set('d', today);
+    window.location.replace(window.location.pathname + '?' + params.toString() + window.location.hash);
+  }
+})();
+</script>
 <style>
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
@@ -49,7 +67,7 @@
   .center-name a:hover { border-bottom-style: solid; }
   #rank-table td, #rank-table th { text-align: center; white-space: nowrap; }
   #rank-table td.center-name, #rank-table th.center-col { text-align: left; }
-  #rank-table th.program-total-col, #rank-table td.program-total { background: #EFF2F6; font-weight: 700; }
+  #rank-table td.program-total { background: #EFF2F6; font-weight: 700; }
   .occ-note { font-size: 11px; color: #6E7882; margin: 6px 2px 0; font-style: italic; }
   .census-btn-wrap { margin-bottom: 20px; }
   .census-btn {
