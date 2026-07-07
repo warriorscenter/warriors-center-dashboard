@@ -45,6 +45,8 @@
   .pill.over { background: #E8ECF5; color: #1B3A6B; }
   .footnote { font-size: 11px; color: #6E7882; margin-top: 20px; line-height: 1.5; font-style: italic; }
   .center-name { font-weight: 600; }
+  .center-name a { color: #1B3A6B; text-decoration: none; border-bottom: 1px dotted #1B3A6B; }
+  .center-name a:hover { border-bottom-style: solid; }
   #rank-table td, #rank-table th { text-align: center; white-space: nowrap; }
   #rank-table td.center-name, #rank-table th.center-col { text-align: left; }
 </style>
@@ -97,12 +99,16 @@
     <tbody id="rank-tbody"></tbody>
   </table>
 </div>
+<div class="footnote" style="margin-top:-2px;">
+  Known gap as of 2026-07-07: Rank Breakdown is sourced entirely from bed census data, so it can only include people who appear in a center's census file. Staff who don't live on-site (at the center or in Grad/Staff House) aren't counted anywhere in this table. Believed off-site staff not reflected above (estimates, not measured): Memphis 2, Bolivar 1, Olive Branch 1&ndash;2, Hardeman 2, New Albany 1. This means Help Staff/Executive Staff totals understate true headcount. A fix sourced from each center's staff roster is in progress; these figures are a manual placeholder until that's live.
+</div>
 
 <div class="footnote">
   Occupancy is sourced from each center's ground-truth bed census (room-by-room, updated near-daily), not from the summary metrics workbook. It counts anyone physically sleeping in a center bed &mdash; numbered rooms plus any cot/chapel overflow &mdash; against that center's fixed center-only capacity, regardless of whether the occupant is a resident, staff member, or graduate. Grad House and Staff House beds are excluded entirely, even for a genuine program resident temporarily overflowing into one of them, because those aren't center beds. Occupancy over 100% is possible (cot/chapel overflow) and shown as-is, not capped.
   Staff/Grad Beds shows how many of the occupied center beds (from the figure above) are held by staff or graduates rather than active program residents (Bootcamp/Recruit/Recharge/E-1&ndash;E-9) &mdash; this can be a large share at some centers and is worth watching alongside the raw occupancy number.
   Rank Breakdown shows the same occupied population split out by exact rank, from the same daily bed census source.
   Known gap: at centers where real residents overflow into Staff House, those beds aren't counted anywhere in this table (not in Occupancy, not in Staff/Grad Beds, not in Rank Breakdown) since Staff House sits outside the tracked center capacity entirely.
+  Center names in the tables above link to that day's full bed census.
   Avg LOS restricted to residents with Entry Date on or after 1/1/25 (when client-level tracking began).
   Bootcamp completion = non-recharge residents with Entry Date this year, excluding the most recent 30 days as a maturity buffer.
   Recharge % is a separate metric from the summary metrics workbook (current Recharge count &divide; current core-program count), not derived from the bed census.
@@ -115,7 +121,7 @@
   "snapshots": [
     {
       "date": "2026-07-07",
-      "generated_at": "2026-07-07T13:21:28.427336",
+      "generated_at": "2026-07-07T13:43:39.865318",
       "centers": {
         "Memphis": {
           "as_of_date": "2026-07-05",
@@ -135,11 +141,11 @@
             "E-5": 7,
             "E-6": 4,
             "E-7": 4,
-            "E-8": 2,
+            "E-8": 3,
             "E-9": 2,
-            "Graduate": 2,
-            "Help Staff": 4,
-            "Executive Staff": 0
+            "Graduate": 12,
+            "Help Staff": 11,
+            "Executive Staff": 2
           },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 126,
@@ -176,11 +182,11 @@
             "E-5": 0,
             "E-6": 1,
             "E-7": 1,
-            "E-8": 1,
+            "E-8": 2,
             "E-9": 0,
-            "Graduate": 16,
+            "Graduate": 18,
             "Help Staff": 8,
-            "Executive Staff": 2
+            "Executive Staff": 3
           },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 83,
@@ -214,14 +220,14 @@
             "E-2": 2,
             "E-3": 1,
             "E-4": 1,
-            "E-5": 1,
-            "E-6": 1,
-            "E-7": 0,
-            "E-8": 0,
-            "E-9": 0,
-            "Graduate": 0,
-            "Help Staff": 4,
-            "Executive Staff": 0
+            "E-5": 2,
+            "E-6": 3,
+            "E-7": 1,
+            "E-8": 1,
+            "E-9": 3,
+            "Graduate": 1,
+            "Help Staff": 15,
+            "Executive Staff": 2
           },
           "occ_methodology": "bed_census",
           "ytd_arrivals": 38,
@@ -337,14 +343,14 @@
           "E-2": 17,
           "E-3": 4,
           "E-4": 4,
-          "E-5": 11,
-          "E-6": 6,
-          "E-7": 7,
-          "E-8": 3,
-          "E-9": 2,
-          "Graduate": 18,
-          "Help Staff": 25,
-          "Executive Staff": 8
+          "E-5": 12,
+          "E-6": 8,
+          "E-7": 8,
+          "E-8": 6,
+          "E-9": 5,
+          "Graduate": 31,
+          "Help Staff": 43,
+          "Executive Staff": 13
         },
         "ytd_arrivals": 277,
         "ytd_departures": 264,
@@ -449,7 +455,7 @@ function render() {
     var wk = week_ago && week_ago.centers[name];
     var mo = month_ago && month_ago.centers[name];
     return '<tr>' +
-      '<td class="center-name">' + name + '</td>' +
+      '<td class="center-name"><a href="bedcensus.html#' + name.replace(/\s/g,'') + '">' + name + '</a></td>' +
       '<td>' + c.beds_occupied + ' / ' + c.total_beds + '</td>' +
       '<td><span class="pill ' + occPill(c.occupancy_pct) + '">' + c.occupancy_pct + '%</span></td>' +
       '<td>' + c.staff_grad_beds + ' <span style="color:#6E7882;font-size:11px;">(' + c.program_residents + ' residents)</span></td>' +
@@ -489,7 +495,7 @@ function render() {
   var rankRows = order.map(function(name) {
     var c = centers[name];
     if (!c || !c.rank_counts) return '';
-    return '<tr><td class="center-name">' + name + '</td>' +
+    return '<tr><td class="center-name"><a href="bedcensus.html#' + name.replace(/\s/g,'') + '">' + name + '</a></td>' +
       RANK_ORDER.map(function(r) { return '<td>' + (c.rank_counts[r] || 0) + '</td>'; }).join('') +
       '</tr>';
   }).join('');
