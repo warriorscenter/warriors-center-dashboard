@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F8F9FB; color: #222222;
+  }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 22px; margin: 0; color: #1B3A6B; font-weight: 700; }
+  .header .sub { color: #6E7882; font-size: 13px; margin-top: 4px; }
+  .asof { font-size: 12px; color: #6E7882; background: #fff; border: 1px solid #E0E5E9; border-radius: 6px; padding: 6px 12px; }
+
+  .system-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card {
+    background: #fff; border: 1px solid #E0E5E9; border-radius: 10px; padding: 14px 16px;
+  }
+  .stat-card .label { font-size: 11px; color: #6E7882; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 6px; }
+  .stat-card .value { font-size: 24px; font-weight: 700; color: #1B3A6B; line-height: 1.1; }
+  .stat-card .delta { font-size: 12px; margin-top: 4px; }
+  .delta.up { color: #1a7d3a; }
+  .delta.down { color: #b3261e; }
+  .delta.flat { color: #6E7882; }
+  .delta.neutral { color: #6E7882; }
+
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #E0E5E9; border-radius: 10px; overflow: hidden; }
+  thead th {
+    background: #1B3A6B; color: #fff; text-align: left; padding: 10px 12px; font-size: 12.5px; font-weight: 600;
+  }
+  tbody td { padding: 10px 12px; font-size: 13px; border-top: 1px solid #E0E5E9; }
+  tbody tr:nth-child(even) { background: #F8F9FB; }
+  tbody tr.total-row { background: #EFF2F6; font-weight: 700; }
+  .section-title { font-size: 15px; font-weight: 700; color: #1B3A6B; margin: 28px 0 10px; }
+  .card-wrap { background: #fff; border: 1px solid #E0E5E9; border-radius: 10px; padding: 4px; margin-bottom: 8px; overflow-x: auto; }
+  .spark-cell { width: 90px; }
+  canvas.spark { width: 90px !important; height: 28px !important; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .pill.good { background: #E4F3E8; color: #1a7d3a; }
+  .pill.warn { background: #FBEFD9; color: #8a6100; }
+  .pill.bad { background: #FBE7E5; color: #b3261e; }
+  .pill.over { background: #E8ECF5; color: #1B3A6B; }
+  .footnote { font-size: 11px; color: #6E7882; margin-top: 20px; line-height: 1.5; font-style: italic; }
+  .center-name { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Warriors Center &mdash; Live Operations Dashboard</h1>
+    <div class="sub">Occupancy, throughput, and program metrics across all centers</div>
+  </div>
+  <div class="asof" id="asof-badge">Loading...</div>
+</div>
+
+<div class="system-row" id="system-cards"></div>
+
+<div class="section-title">By Center</div>
+<div class="card-wrap">
+  <table id="center-table">
+    <thead>
+      <tr>
+        <th>Center</th>
+        <th>Occupied / Center Capacity</th>
+        <th>Occupancy</th>
+        <th>Staff/Grad Beds</th>
+        <th class="spark-cell">Trend (30d)</th>
+        <th>YTD Arrivals</th>
+        <th>YTD Departures</th>
+        <th>YTD Net</th>
+        <th>30d Net</th>
+        <th>Avg LOS (since 1/1/25)</th>
+        <th>Bootcamp Rate</th>
+        <th>Recharge %</th>
+        <th>Grads (CY)</th>
+        <th>Grads (since 1/1/25)</th>
+      </tr>
+    </thead>
+    <tbody id="center-tbody"></tbody>
+  </table>
+</div>
+
+<div class="footnote">
+  Occupancy is sourced from each center's ground-truth bed census (room-by-room, updated near-daily), not from the summary metrics workbook. It counts anyone physically sleeping in a center bed &mdash; numbered rooms plus any cot/chapel overflow &mdash; against that center's fixed center-only capacity, regardless of whether the occupant is a resident, staff member, or graduate. Grad House and Staff House beds are excluded entirely, even for a genuine program resident temporarily overflowing into one of them, because those aren't center beds. Occupancy over 100% is possible (cot/chapel overflow) and shown as-is, not capped.
+  Staff/Grad Beds shows how many of the occupied center beds (from the figure above) are held by staff or graduates rather than active program residents (Bootcamp/Recruit/Recharge/E-1&ndash;E-9) &mdash; this can be a large share at some centers and is worth watching alongside the raw occupancy number.
+  Known gap: at centers where real residents overflow into Staff House, those beds aren't counted anywhere in this table (not in Occupancy, not in Staff/Grad Beds) since Staff House sits outside the tracked center capacity entirely.
+  Avg LOS restricted to residents with Entry Date on or after 1/1/25 (when client-level tracking began).
+  Bootcamp completion = non-recharge residents with Entry Date this year, excluding the most recent 30 days as a maturity buffer.
+  Recharge % is a separate metric from the summary metrics workbook (current Recharge count &divide; current core-program count), not derived from the bed census.
+  Financial metrics (cost/bed, net margin) are intentionally excluded here since they only refresh monthly with the P&amp;L close &mdash; see the monthly Director Review deck for those.
+  Data refreshes daily. Trend arrows compare to 7 days ago (occupancy, net flow, recharge) or 30 days ago (bootcamp rate, LOS, graduates) once enough history has accumulated.
+</div>
+
+<script id="dashboard-data" type="application/json">
+{
+  "snapshots": [
+    {
+      "date": "2026-07-07",
+      "generated_at": "2026-07-07T12:07:12.389308",
+      "centers": {
+        "Memphis": {
+          "as_of_date": "2026-07-05",
+          "beds_occupied": 68,
+          "total_beds": 69,
+          "occupancy_pct": 98.6,
+          "staff_grad_beds": 6,
+          "program_residents": 62,
+          "occ_methodology": "bed_census",
+          "ytd_arrivals": 126,
+          "ytd_departures": 114,
+          "ytd_net": 12,
+          "t30_arrivals": 17,
+          "t30_departures": 12,
+          "t30_net": 5,
+          "avg_los_days_since_1_1_25": 61.9,
+          "bootcamp_cohort_n": 97,
+          "bootcamp_completed_n": 49,
+          "bootcamp_completion_pct": 50.5,
+          "recharge_current_count": 8,
+          "core_program_current": 65,
+          "recharge_pct_current": 12.3,
+          "graduates_current_year": 2,
+          "graduates_since_1_1_25": 13
+        },
+        "Bolivar": {
+          "as_of_date": "2026-07-01",
+          "beds_occupied": 59,
+          "total_beds": 67,
+          "occupancy_pct": 88.1,
+          "staff_grad_beds": 26,
+          "program_residents": 33,
+          "occ_methodology": "bed_census",
+          "ytd_arrivals": 83,
+          "ytd_departures": 83,
+          "ytd_net": 0,
+          "t30_arrivals": 10,
+          "t30_departures": 10,
+          "t30_net": 0,
+          "avg_los_days_since_1_1_25": 61.7,
+          "bootcamp_cohort_n": 68,
+          "bootcamp_completed_n": 27,
+          "bootcamp_completion_pct": 39.7,
+          "recharge_current_count": 2,
+          "core_program_current": 37,
+          "recharge_pct_current": 5.4,
+          "graduates_current_year": 6,
+          "graduates_since_1_1_25": 15
+        },
+        "Olive Branch": {
+          "as_of_date": "2026-07-06",
+          "beds_occupied": 23,
+          "total_beds": 26,
+          "occupancy_pct": 88.5,
+          "staff_grad_beds": 4,
+          "program_residents": 19,
+          "occ_methodology": "bed_census",
+          "ytd_arrivals": 38,
+          "ytd_departures": 33,
+          "ytd_net": 5,
+          "t30_arrivals": 9,
+          "t30_departures": 7,
+          "t30_net": 2,
+          "avg_los_days_since_1_1_25": 91.6,
+          "bootcamp_cohort_n": 23,
+          "bootcamp_completed_n": 12,
+          "bootcamp_completion_pct": 52.2,
+          "recharge_current_count": 2,
+          "core_program_current": 27,
+          "recharge_pct_current": 7.4,
+          "graduates_current_year": 6,
+          "graduates_since_1_1_25": 26
+        },
+        "Hardeman": {
+          "as_of_date": "2026-07-06",
+          "beds_occupied": 16,
+          "total_beds": 17,
+          "occupancy_pct": 94.1,
+          "staff_grad_beds": 6,
+          "program_residents": 10,
+          "occ_methodology": "bed_census",
+          "ytd_arrivals": 15,
+          "ytd_departures": 12,
+          "ytd_net": 3,
+          "t30_arrivals": 3,
+          "t30_departures": 1,
+          "t30_net": 2,
+          "avg_los_days_since_1_1_25": 109.7,
+          "bootcamp_cohort_n": 12,
+          "bootcamp_completed_n": 5,
+          "bootcamp_completion_pct": 41.7,
+          "recharge_current_count": 3,
+          "core_program_current": 11,
+          "recharge_pct_current": 27.3,
+          "graduates_current_year": 2,
+          "graduates_since_1_1_25": 6
+        },
+        "New Albany": {
+          "as_of_date": "2026-07-06",
+          "beds_occupied": 15,
+          "total_beds": 18,
+          "occupancy_pct": 83.3,
+          "staff_grad_beds": 9,
+          "program_residents": 6,
+          "occ_methodology": "bed_census",
+          "ytd_arrivals": 15,
+          "ytd_departures": 22,
+          "ytd_net": -7,
+          "t30_arrivals": 4,
+          "t30_departures": 3,
+          "t30_net": 1,
+          "avg_los_days_since_1_1_25": 55.1,
+          "bootcamp_cohort_n": 6,
+          "bootcamp_completed_n": 4,
+          "bootcamp_completion_pct": 66.7,
+          "recharge_current_count": 0,
+          "core_program_current": 6,
+          "recharge_pct_current": 0.0,
+          "graduates_current_year": 1,
+          "graduates_since_1_1_25": 4
+        }
+      },
+      "system": {
+        "occupancy_pct": 91.9,
+        "beds_occupied": 181,
+        "total_beds": 197,
+        "staff_grad_beds": 51,
+        "program_residents": 130,
+        "ytd_arrivals": 277,
+        "ytd_departures": 264,
+        "ytd_net": 13,
+        "t30_arrivals": 43,
+        "t30_departures": 33,
+        "t30_net": 10,
+        "avg_los_days_since_1_1_25": 76.0,
+        "bootcamp_cohort_n": 206,
+        "bootcamp_completed_n": 97,
+        "bootcamp_completion_pct": 47.1,
+        "recharge_current_count": 15,
+        "core_program_current": 146,
+        "recharge_pct_current": 10.3,
+        "graduates_current_year": 17,
+        "graduates_since_1_1_25": 64
+      }
+    }
+  ]
+}
+</script>
+
+<script>
+function fmtDelta(curr, prev, opts) {
+  opts = opts || {};
+  if (prev === null || prev === undefined || curr === null || curr === undefined) {
+    return '<span class="delta neutral">building history&hellip;</span>';
+  }
+  var diff = curr - prev;
+  var suffix = opts.suffix || '';
+  var digits = opts.digits === undefined ? 1 : opts.digits;
+  var invert = !!opts.invert;
+  var cls = 'flat';
+  if (Math.abs(diff) > (opts.epsilon || 0)) {
+    var isUp = diff > 0;
+    var good = invert ? !isUp : isUp;
+    cls = good ? 'up' : 'down';
+  }
+  var arrow = diff > (opts.epsilon || 0) ? '&#9650;' : (diff < -(opts.epsilon || 0) ? '&#9660;' : '&#8212;');
+  var absDiff = Math.abs(diff).toFixed(digits);
+  return '<span class="delta ' + cls + '">' + arrow + ' ' + absDiff + suffix + '</span>';
+}
+
+function daysAgoSnapshot(snapshots, n) {
+  if (snapshots.length < 2) return null;
+  var targetDate = new Date(snapshots[snapshots.length - 1].date);
+  targetDate.setDate(targetDate.getDate() - n);
+  var best = null, bestDiff = Infinity;
+  for (var i = 0; i < snapshots.length - 1; i++) {
+    var d = new Date(snapshots[i].date);
+    var diff = Math.abs(d - targetDate);
+    if (diff < bestDiff) { bestDiff = diff; best = snapshots[i]; }
+  }
+  var maxDiffMs = n * 24 * 3600 * 1000 * 1.5;
+  return bestDiff <= maxDiffMs ? best : null;
+}
+
+function occPill(pct) {
+  if (pct > 100) return 'over';
+  if (pct >= 90) return 'good';
+  if (pct >= 75) return 'warn';
+  return 'bad';
+}
+
+function render() {
+  var raw = document.getElementById('dashboard-data').textContent.trim();
+  var data = JSON.parse(raw);
+  var snapshots = data.snapshots || [];
+  if (!snapshots.length) {
+    document.body.innerHTML = '<p style="padding:40px;text-align:center;color:#6E7882;">No data yet.</p>';
+    return;
+  }
+  var latest = snapshots[snapshots.length - 1];
+  var week_ago = daysAgoSnapshot(snapshots, 7);
+  var month_ago = daysAgoSnapshot(snapshots, 30);
+
+  document.getElementById('asof-badge').textContent = 'Data as of ' + latest.date + ' · refreshed daily';
+
+  var sys = latest.system;
+  var sysWeek = week_ago ? week_ago.system : null;
+  var sysMonth = month_ago ? month_ago.system : null;
+  var cards = [
+    { label: 'System Occupancy', value: sys.occupancy_pct + '%', delta: fmtDelta(sys.occupancy_pct, sysWeek && sysWeek.occupancy_pct, {suffix:'pp'}) },
+    { label: 'Beds Occupied', value: sys.beds_occupied + ' / ' + sys.total_beds, delta: '' },
+    { label: 'Staff/Grad Beds', value: sys.staff_grad_beds + ' <span style="font-size:13px;color:#6E7882;">(' + sys.program_residents + ' residents)</span>', delta: '' },
+    { label: 'YTD Net Flow', value: (sys.ytd_net >= 0 ? '+' : '') + sys.ytd_net, delta: fmtDelta(sys.t30_net, sysWeek && sysWeek.t30_net, {digits:0}) + ' <span style="color:#6E7882">(30d net: ' + (sys.t30_net>=0?'+':'') + sys.t30_net + ')</span>' },
+    { label: 'Bootcamp Completion', value: sys.bootcamp_completion_pct + '%', delta: fmtDelta(sys.bootcamp_completion_pct, sysMonth && sysMonth.bootcamp_completion_pct, {suffix:'pp'}) },
+    { label: 'Recharge Rate', value: sys.recharge_pct_current + '%', delta: fmtDelta(sys.recharge_pct_current, sysWeek && sysWeek.recharge_pct_current, {suffix:'pp'}) },
+    { label: 'Graduates (CY / since 1/1/25)', value: sys.graduates_current_year + ' / ' + sys.graduates_since_1_1_25, delta: fmtDelta(sys.graduates_current_year, sysMonth && sysMonth.graduates_current_year, {digits:0}) },
+  ];
+  document.getElementById('system-cards').innerHTML = cards.map(function(c) {
+    return '<div class="stat-card"><div class="label">' + c.label + '</div><div class="value">' + c.value + '</div><div class="delta-wrap">' + c.delta + '</div></div>';
+  }).join('');
+
+  var centers = latest.centers;
+  var order = ['Memphis','Bolivar','Olive Branch','Hardeman','New Albany'];
+  var rows = order.map(function(name) {
+    var c = centers[name];
+    if (!c) return '';
+    var wk = week_ago && week_ago.centers[name];
+    var mo = month_ago && month_ago.centers[name];
+    return '<tr>' +
+      '<td class="center-name">' + name + '</td>' +
+      '<td>' + c.beds_occupied + ' / ' + c.total_beds + '</td>' +
+      '<td><span class="pill ' + occPill(c.occupancy_pct) + '">' + c.occupancy_pct + '%</span></td>' +
+      '<td>' + c.staff_grad_beds + ' <span style="color:#6E7882;font-size:11px;">(' + c.program_residents + ' residents)</span></td>' +
+      '<td class="spark-cell"><canvas class="spark" id="spark-' + name.replace(/\s/g,'') + '"></canvas></td>' +
+      '<td>' + c.ytd_arrivals + '</td>' +
+      '<td>' + c.ytd_departures + '</td>' +
+      '<td>' + (c.ytd_net>=0?'+':'') + c.ytd_net + '</td>' +
+      '<td>' + fmtDelta(c.t30_net, wk && wk.t30_net, {digits:0}) + '</td>' +
+      '<td>' + c.avg_los_days_since_1_1_25 + ' d ' + fmtDelta(c.avg_los_days_since_1_1_25, mo && mo.avg_los_days_since_1_1_25, {suffix:'d'}) + '</td>' +
+      '<td>' + c.bootcamp_completion_pct + '% <span style="color:#6E7882;font-size:11px;">(n=' + c.bootcamp_cohort_n + ')</span> ' + fmtDelta(c.bootcamp_completion_pct, mo && mo.bootcamp_completion_pct, {suffix:'pp'}) + '</td>' +
+      '<td>' + c.recharge_pct_current + '% ' + fmtDelta(c.recharge_pct_current, wk && wk.recharge_pct_current, {suffix:'pp'}) + '</td>' +
+      '<td>' + c.graduates_current_year + '</td>' +
+      '<td>' + c.graduates_since_1_1_25 + '</td>' +
+      '</tr>';
+  }).join('');
+  var sysRow = '<tr class="total-row">' +
+    '<td class="center-name">TOTAL (system)</td>' +
+    '<td>' + sys.beds_occupied + ' / ' + sys.total_beds + '</td>' +
+    '<td>' + sys.occupancy_pct + '%</td>' +
+    '<td>' + sys.staff_grad_beds + ' (' + sys.program_residents + ' residents)</td>' +
+    '<td></td>' +
+    '<td>' + sys.ytd_arrivals + '</td>' +
+    '<td>' + sys.ytd_departures + '</td>' +
+    '<td>' + (sys.ytd_net>=0?'+':'') + sys.ytd_net + '</td>' +
+    '<td>' + (sys.t30_net>=0?'+':'') + sys.t30_net + '</td>' +
+    '<td>' + sys.avg_los_days_since_1_1_25 + ' d</td>' +
+    '<td>' + sys.bootcamp_completion_pct + '% (n=' + sys.bootcamp_cohort_n + ')</td>' +
+    '<td>' + sys.recharge_pct_current + '%</td>' +
+    '<td>' + sys.graduates_current_year + '</td>' +
+    '<td>' + sys.graduates_since_1_1_25 + '</td>' +
+    '</tr>';
+  document.getElementById('center-tbody').innerHTML = rows + sysRow;
+
+  if (window.Chart) {
+    order.forEach(function(name) {
+      var canvas = document.getElementById('spark-' + name.replace(/\s/g,''));
+      if (!canvas) return;
+      var series = snapshots.map(function(s) { return s.centers[name] ? s.centers[name].occupancy_pct : null; }).filter(function(v){return v !== null;});
+      if (series.length < 2) {
+        var ctx2d = canvas.getContext('2d');
+        ctx2d.font = '10px sans-serif';
+        ctx2d.fillStyle = '#B7BEC6';
+        ctx2d.fillText('building…', 4, 18);
+        return;
+      }
+      new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: { labels: series.map(function(_,i){return i;}), datasets: [{ data: series, borderColor: '#1B3A6B', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false }] },
+        options: {
+          responsive: false, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          scales: { x: { display: false }, y: { display: false } },
+          elements: { line: { borderJoinStyle: 'round' } }
+        }
+      });
+    });
+  }
+}
+
+render();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous" onload="render()"></script>
+
+</body>
+</html>
