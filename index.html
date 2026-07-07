@@ -49,6 +49,14 @@
   .center-name a:hover { border-bottom-style: solid; }
   #rank-table td, #rank-table th { text-align: center; white-space: nowrap; }
   #rank-table td.center-name, #rank-table th.center-col { text-align: left; }
+  #rank-table th.program-total-col, #rank-table td.program-total { background: #EFF2F6; font-weight: 700; }
+  .occ-note { font-size: 11px; color: #6E7882; margin: 6px 2px 0; font-style: italic; }
+  .census-btn-wrap { margin-bottom: 20px; }
+  .census-btn {
+    display: inline-block; padding: 12px 22px; background: #1B3A6B; color: #fff;
+    text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+  }
+  .census-btn:hover { background: #14294d; }
 </style>
 </head>
 <body>
@@ -61,6 +69,10 @@
   <div class="asof" id="asof-badge">Loading...</div>
 </div>
 
+<div class="census-btn-wrap">
+  <a class="census-btn" href="bedcensus.html">View Full Bed Census (All Centers) &rarr;</a>
+</div>
+
 <div class="system-row" id="system-cards"></div>
 
 <div class="section-title">By Center</div>
@@ -70,7 +82,7 @@
       <tr>
         <th>Center</th>
         <th>Occupied / Center Capacity</th>
-        <th>Occupancy</th>
+        <th>Occupancy*</th>
         <th>Staff/Grad Beds</th>
         <th class="spark-cell">Trend (30d)</th>
         <th>YTD Arrivals</th>
@@ -87,6 +99,7 @@
     <tbody id="center-tbody"></tbody>
   </table>
 </div>
+<div class="occ-note">*Occupancy is based on center-only beds &mdash; Grad House, Staff House, and offices are excluded, even for residents living in them.</div>
 
 <div class="section-title">Rank Breakdown by Center</div>
 <div class="card-wrap">
@@ -100,14 +113,15 @@
   </table>
 </div>
 <div class="footnote" style="margin-top:-2px;">
-  Known gap as of 2026-07-07: Rank Breakdown is sourced entirely from bed census data, so it can only include people who appear in a center's census file. Staff who don't live on-site (at the center or in Grad/Staff House) aren't counted anywhere in this table. Believed off-site staff not reflected above (estimates, not measured): Memphis 2, Bolivar 1, Olive Branch 1&ndash;2, Hardeman 2, New Albany 1. This means Help Staff/Executive Staff totals understate true headcount. A fix sourced from each center's staff roster is in progress; these figures are a manual placeholder until that's live.
+  Program Total = Bootcamp + Recruit + Recharge + E-1 through E-9 (everyone actively working the program). Unlike Occupancy above, Rank Breakdown counts everyone who appears anywhere in a center's census &mdash; including Grad House and Staff House &mdash; not just people in center beds.
+  Known gap as of 2026-07-07: Rank Breakdown is sourced entirely from bed census data, so it can only include people who appear in a center's census file. Staff who don't live on-site at all (not even in Grad/Staff House) aren't counted anywhere in this table. Believed off-site staff not reflected above (estimates, not measured): Memphis 2, Bolivar 1, Olive Branch 1&ndash;2, Hardeman 2, New Albany 1. This means Help Staff/Executive Staff totals understate true headcount. A fix sourced from each center's staff roster is in progress; these figures are a manual placeholder until that's live.
 </div>
 
 <div class="footnote">
   Occupancy is sourced from each center's ground-truth bed census (room-by-room, updated near-daily), not from the summary metrics workbook. It counts anyone physically sleeping in a center bed &mdash; numbered rooms plus any cot/chapel overflow &mdash; against that center's fixed center-only capacity, regardless of whether the occupant is a resident, staff member, or graduate. Grad House and Staff House beds are excluded entirely, even for a genuine program resident temporarily overflowing into one of them, because those aren't center beds. Occupancy over 100% is possible (cot/chapel overflow) and shown as-is, not capped.
   Staff/Grad Beds shows how many of the occupied center beds (from the figure above) are held by staff or graduates rather than active program residents (Bootcamp/Recruit/Recharge/E-1&ndash;E-9) &mdash; this can be a large share at some centers and is worth watching alongside the raw occupancy number.
-  Rank Breakdown shows the same occupied population split out by exact rank, from the same daily bed census source.
-  Known gap: at centers where real residents overflow into Staff House, those beds aren't counted anywhere in this table (not in Occupancy, not in Staff/Grad Beds, not in Rank Breakdown) since Staff House sits outside the tracked center capacity entirely.
+  Rank Breakdown shows the full program population split out by exact rank, from the same daily bed census source, including Grad House/Staff House residents that Occupancy excludes.
+  Known gap: at centers where real residents overflow into Staff House, those beds aren't counted anywhere in the Occupancy or Staff/Grad Beds figures above (Staff House sits outside the tracked center capacity entirely), though they are still counted in Rank Breakdown.
   Center names in the tables above link to that day's full bed census.
   Avg LOS restricted to residents with Entry Date on or after 1/1/25 (when client-level tracking began).
   Bootcamp completion = non-recharge residents with Entry Date this year, excluding the most recent 30 days as a maturity buffer.
@@ -375,6 +389,13 @@
 
 <script>
 var RANK_ORDER = ['Bootcamp','Recruit','Recharge','E-1','E-2','E-3','E-4','E-5','E-6','E-7','E-8','E-9','Graduate','Help Staff','Executive Staff'];
+var PROGRAM_RANKS = ['Bootcamp','Recruit','Recharge','E-1','E-2','E-3','E-4','E-5','E-6','E-7','E-8','E-9'];
+var TAIL_RANKS = ['Graduate','Help Staff','Executive Staff'];
+
+function programTotal(rankCounts) {
+  if (!rankCounts) return 0;
+  return PROGRAM_RANKS.reduce(function(sum, r) { return sum + (rankCounts[r] || 0); }, 0);
+}
 
 function fmtDelta(curr, prev, opts) {
   opts = opts || {};
@@ -491,16 +512,23 @@ function render() {
 
   // Rank breakdown table
   var rankHeadRow = document.getElementById('rank-thead-row');
-  rankHeadRow.innerHTML = '<th class="center-col">Center</th>' + RANK_ORDER.map(function(r) { return '<th>' + r + '</th>'; }).join('');
+  rankHeadRow.innerHTML = '<th class="center-col">Center</th>' +
+    PROGRAM_RANKS.map(function(r) { return '<th>' + r + '</th>'; }).join('') +
+    '<th class="program-total-col">Program Total</th>' +
+    TAIL_RANKS.map(function(r) { return '<th>' + r + '</th>'; }).join('');
   var rankRows = order.map(function(name) {
     var c = centers[name];
     if (!c || !c.rank_counts) return '';
     return '<tr><td class="center-name"><a href="bedcensus.html#' + name.replace(/\s/g,'') + '">' + name + '</a></td>' +
-      RANK_ORDER.map(function(r) { return '<td>' + (c.rank_counts[r] || 0) + '</td>'; }).join('') +
+      PROGRAM_RANKS.map(function(r) { return '<td>' + (c.rank_counts[r] || 0) + '</td>'; }).join('') +
+      '<td class="program-total">' + programTotal(c.rank_counts) + '</td>' +
+      TAIL_RANKS.map(function(r) { return '<td>' + (c.rank_counts[r] || 0) + '</td>'; }).join('') +
       '</tr>';
   }).join('');
   var rankSysRow = '<tr class="total-row"><td class="center-name">TOTAL (system)</td>' +
-    RANK_ORDER.map(function(r) { return '<td>' + (sys.rank_counts ? (sys.rank_counts[r] || 0) : 0) + '</td>'; }).join('') +
+    PROGRAM_RANKS.map(function(r) { return '<td>' + (sys.rank_counts ? (sys.rank_counts[r] || 0) : 0) + '</td>'; }).join('') +
+    '<td class="program-total">' + programTotal(sys.rank_counts) + '</td>' +
+    TAIL_RANKS.map(function(r) { return '<td>' + (sys.rank_counts ? (sys.rank_counts[r] || 0) : 0) + '</td>'; }).join('') +
     '</tr>';
   document.getElementById('rank-tbody').innerHTML = rankRows + rankSysRow;
 

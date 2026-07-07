@@ -13,7 +13,8 @@
     background: #F8F9FB; color: #222222;
   }
   h1 { font-size: 20px; color: #1B3A6B; margin: 0 0 4px; }
-  .sub { color: #6E7882; font-size: 13px; margin-bottom: 16px; }
+  .sub { color: #6E7882; font-size: 13px; margin-bottom: 4px; }
+  .generated { font-size: 12px; color: #fff; background: #1B3A6B; display: inline-block; padding: 4px 12px; border-radius: 6px; margin-bottom: 16px; font-weight: 600; }
   .nav { margin-bottom: 24px; }
   .nav a {
     display: inline-block; margin: 0 8px 8px 0; padding: 6px 14px; background: #fff;
@@ -34,7 +35,8 @@
 </head>
 <body>
 <h1>Warriors Center &mdash; Bed Census, All Centers</h1>
-<div class="sub">Room-by-room census as of the most recent fetch for each center. Updated daily.</div>
+<div class="sub">Room-by-room census as of the most recent fetch for each center.</div>
+<div class="generated">Page generated July 07, 2026</div>
 <div class="nav"><a href="#Memphis">Memphis</a><a href="#Bolivar">Bolivar</a><a href="#OliveBranch">Olive Branch</a><a href="#Hardeman">Hardeman</a><a href="#NewAlbany">New Albany</a></div>
 
 <div class="center-section" id="Memphis">
@@ -113,7 +115,7 @@
 </div>
 
 <div class="footnote">
-  This is the same raw room-by-room census data the dashboard's occupancy figures are computed from. Rooms are sorted numerically. "Open" rows (shown in grey italics) are empty beds. Office/utility rows (e.g. Bootcamp Office, Med Room) are not shown here since they aren't residents.
+  This is the same raw room-by-room census data the dashboard's occupancy figures are computed from. Rooms are sorted numerically. Each center's "Week of" date reflects that center's own most recent census file, which may not be the same date across all centers since they update on different schedules - the "Page generated" date above is when this page itself was last built. "Open" rows (shown in grey italics) are empty beds. Office/utility rows (e.g. Bootcamp Office, Med Room) are not shown here since they aren't residents.
 </div>
 </body>
 </html>
