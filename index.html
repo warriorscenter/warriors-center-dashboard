@@ -83,6 +83,9 @@
     border: 2px solid #1B3A6B;
   }
   .grad-btn:hover { background: #EFF2F6; }
+  .doc-link { color: #1B3A6B; text-decoration: none; font-weight: 600; }
+  .doc-link:hover { text-decoration: underline; }
+  #org-info-table td, #org-info-table th { vertical-align: top; }
 </style>
 </head>
 <body>
@@ -158,6 +161,42 @@
   Cost/Bed/Day is a monthly-refresh financial metric layered onto this otherwise-nightly table &mdash; see the note directly under the By Center table above for its exact formula and refresh cadence. New Albany's bed-day denominator reflects a mid-year facility move (32 beds at the prior Helena/Phillips County location through late February, a relocation gap, then 18 beds at New Albany from April 1 onward) using a best-estimate transition date; treat New Albany's figure as directionally accurate rather than exact to the penny.
   Data refreshes daily (except Cost/Bed/Day, noted above). Trend arrows compare to 7 days ago (occupancy, net flow, recharge) or 30 days ago (bootcamp rate, LOS, graduates) once enough history has accumulated.
 </div>
+
+<div class="section-title">Organization Info</div>
+<div class="card-wrap">
+  <table id="org-info-table">
+    <thead>
+      <tr><th>Center</th><th>EIN</th><th>Documents</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center-name">Memphis</td>
+        <td>84-4108221</td>
+        <td><a class="doc-link" href="IRSDeterminationLetter_Memphis.pdf" target="_blank" rel="noopener">IRS Determination Letter &rarr;</a></td>
+      </tr>
+      <tr>
+        <td class="center-name">Bolivar</td>
+        <td>82-5140203</td>
+        <td><a class="doc-link" href="IRSDeterminationLetter_Bolivar.pdf" target="_blank" rel="noopener">IRS Determination Letter &rarr;</a></td>
+      </tr>
+      <tr>
+        <td class="center-name">Olive Branch</td>
+        <td>84-4137669</td>
+        <td>
+          <a class="doc-link" href="IRSDeterminationLetter_OliveBranch.pdf" target="_blank" rel="noopener">IRS Determination Letter &rarr;</a>
+          &middot;
+          <a class="doc-link" href="MSSalesTaxExemption_OliveBranch.pdf" target="_blank" rel="noopener">MS Sales Tax Exemption &rarr;</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="center-name">Hardeman</td>
+        <td>86-1509140</td>
+        <td><a class="doc-link" href="IRSDeterminationLetter_Hardeman.pdf" target="_blank" rel="noopener">IRS Determination Letter &rarr;</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="occ-note">Each Warriors Center location is independently incorporated as its own 501(c)(3) with its own EIN &mdash; these are the IRS determination letters on file for each. New Albany's letter is not yet posted here: that entity is still operating under its predecessor's legal name (Warriors Center for Women Phillips County) pending a state corporate domestication and IRS name change. This section is static reference material, not part of the nightly data refresh &mdash; it only changes when Matthew updates it directly.</div>
 
 <script id="dashboard-data" type="application/json">
 {
