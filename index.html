@@ -69,12 +69,18 @@
   #rank-table td.center-name, #rank-table th.center-col { text-align: left; }
   #rank-table td.program-total { background: #EFF2F6; font-weight: 700; }
   .occ-note { font-size: 11px; color: #6E7882; margin: 6px 2px 0; font-style: italic; }
-  .census-btn-wrap { margin-bottom: 20px; }
+  .census-btn-wrap { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
   .census-btn {
     display: inline-block; padding: 12px 22px; background: #1B3A6B; color: #fff;
     text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 700;
   }
   .census-btn:hover { background: #14294d; }
+  .grad-btn {
+    display: inline-block; padding: 12px 22px; background: #fff; color: #1B3A6B;
+    text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+    border: 2px solid #1B3A6B;
+  }
+  .grad-btn:hover { background: #EFF2F6; }
 </style>
 </head>
 <body>
@@ -89,6 +95,7 @@
 
 <div class="census-btn-wrap">
   <a class="census-btn" href="bedcensus.html">View Full Bed Census (All Centers) &rarr;</a>
+  <a class="grad-btn" href="graduations.html">View Graduation Report &rarr;</a>
 </div>
 
 <div class="system-row" id="system-cards"></div>
