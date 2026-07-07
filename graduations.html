@@ -33,9 +33,13 @@
     display: inline-block; margin: 0 8px 8px 0; padding: 6px 14px; background: #fff;
     border: 1px solid #E0E5E9; border-radius: 16px; color: #1B3A6B; text-decoration: none; font-size: 13px; font-weight: 600;
   }
+  .corrections-section { margin-bottom: 32px; background: #fff; border: 1px solid #FBEFD9; border-radius: 10px; padding: 14px 16px; }
+  .corrections-section h2 { font-size: 16px; color: #1B3A6B; margin: 0 0 6px; }
+  .corrections-section .sub { margin-bottom: 10px; }
   .month-section { margin-bottom: 36px; scroll-margin-top: 16px; }
   .month-section h2 { font-size: 18px; color: #1B3A6B; margin: 0 0 10px; }
   .badge { font-size: 11px; color: #8a6100; background: #FBEFD9; padding: 2px 8px; border-radius: 10px; font-weight: 600; vertical-align: middle; }
+  .badge.warn { color: #b3261e; background: #FBE7E5; }
   .sub-section { background: #fff; border: 1px solid #E0E5E9; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
   .sub-section h3 { font-size: 13px; color: #1B3A6B; margin: 0 0 8px; }
   table { width: 100%; border-collapse: collapse; }
@@ -49,9 +53,16 @@
 <body>
 <a class="back-link" href="index.html">&larr; Back to Dashboard</a>
 <h1>Warriors Center &mdash; Graduation Report</h1>
-<div class="sub">Bootcamp completions and program graduations across all centers, by month.</div>
+<div class="sub">Bootcamp completions, program graduations, and returns to Bootcamp across all centers, by month.</div>
 <div class="generated">Page generated July 07, 2026</div>
 <div class="nav"><a href="#2026-07">July 2026 (this month)</a></div>
+
+<div class="corrections-section">
+  <h2>Flagged Corrections <span class="badge warn">verify</span></h2>
+  <div class="sub">Excluded from the counts below - a likely data-entry mistake (marked Recruit, then reverted back to Bootcamp within 5 days for the same person). Not deleted from the record, just kept out of the real counts until confirmed.</div>
+  <p class="empty">(none detected)</p>
+</div>
+
 
 <div class="month-section" id="2026-07">
   <h2>July 2026 <span class="badge">in progress</span></h2>
@@ -63,10 +74,14 @@
     <h3>Program Graduations (0)</h3>
     <p class="empty">(none recorded)</p>
   </div>
+  <div class="sub-section">
+    <h3>Returned to Bootcamp (0)</h3>
+    <p class="empty">(none recorded)</p>
+  </div>
 </div>
 
 <div class="footnote">
-  Matching is by name only (no persistent resident ID system yet) - spot-check against what you already know before sending anything to the board. Events only exist from 2026-07-07 onward; earlier graduations cannot be backfilled. The current month is tagged "in progress" since it isn't finalized until the 1st of the following month.
+  Matching is by name only (no persistent resident ID system yet) - spot-check against what you already know before sending anything to the board. Events only exist from 2026-07-07 onward; earlier graduations cannot be backfilled. The current month is tagged "in progress" since it isn't finalized until the 1st of the following month. Returned to Bootcamp reflects real, deliberate resets (e.g. relapse or rule violations) - it is not filtered for possible mistakes the way Bootcamp Completions is, except for the one narrow flagged-correction pattern shown above.
 </div>
 </body>
 </html>

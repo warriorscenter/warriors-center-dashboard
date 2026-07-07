@@ -68,6 +68,8 @@
   #rank-table td, #rank-table th { text-align: center; white-space: nowrap; }
   #rank-table td.center-name, #rank-table th.center-col { text-align: left; }
   #rank-table td.program-total { background: #EFF2F6; font-weight: 700; }
+  #center-table td.cost-cell { background: #F3F0FA; }
+  #center-table tr.total-row td.cost-cell { background: #EFF2F6; }
   .occ-note { font-size: 11px; color: #6E7882; margin: 6px 2px 0; font-style: italic; }
   .census-btn-wrap { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
   .census-btn {
@@ -119,12 +121,14 @@
         <th>Recharge %</th>
         <th>Grads (CY)</th>
         <th>Grads (since 1/1/25)</th>
+        <th>Cost/Bed/Day&dagger;</th>
       </tr>
     </thead>
     <tbody id="center-tbody"></tbody>
   </table>
 </div>
 <div class="occ-note">*Occupancy is based on center-only beds &mdash; Grad House, Staff House, and offices are excluded, even for residents living in them.</div>
+<div class="occ-note">&dagger;Cost/Bed/Day = Total Expenses (COGS + Operating Expenses + Internal Support Distributed) &divide; bed-days available (center-only beds + Grad House beds, days elapsed year-to-date). Sourced from the P&amp;L close as of <span id="cost-asof">&mdash;</span> and updates once a month (on the 4th, after financials close) &mdash; unlike every other column in this table, it does NOT refresh nightly.</div>
 
 <div class="section-title">Rank Breakdown by Center</div>
 <div class="card-wrap">
@@ -151,8 +155,8 @@
   Avg LOS restricted to residents with Entry Date on or after 1/1/25 (when client-level tracking began).
   Bootcamp completion = non-recharge residents with Entry Date this year, excluding the most recent 30 days as a maturity buffer.
   Recharge % is a separate metric from the summary metrics workbook (current Recharge count &divide; current core-program count), not derived from the bed census.
-  Financial metrics (cost/bed, net margin) are intentionally excluded here since they only refresh monthly with the P&amp;L close &mdash; see the monthly Director Review deck for those.
-  Data refreshes daily. Trend arrows compare to 7 days ago (occupancy, net flow, recharge) or 30 days ago (bootcamp rate, LOS, graduates) once enough history has accumulated.
+  Cost/Bed/Day is a monthly-refresh financial metric layered onto this otherwise-nightly table &mdash; see the note directly under the By Center table above for its exact formula and refresh cadence. New Albany's bed-day denominator reflects a mid-year facility move (32 beds at the prior Helena/Phillips County location through late February, a relocation gap, then 18 beds at New Albany from April 1 onward) using a best-estimate transition date; treat New Albany's figure as directionally accurate rather than exact to the penny.
+  Data refreshes daily (except Cost/Bed/Day, noted above). Trend arrows compare to 7 days ago (occupancy, net flow, recharge) or 30 days ago (bootcamp rate, LOS, graduates) once enough history has accumulated.
 </div>
 
 <script id="dashboard-data" type="application/json">
@@ -160,7 +164,7 @@
   "snapshots": [
     {
       "date": "2026-07-07",
-      "generated_at": "2026-07-07T13:43:39.865318",
+      "generated_at": "2026-07-07T17:29:30.178392",
       "centers": {
         "Memphis": {
           "as_of_date": "2026-07-05",
@@ -201,7 +205,10 @@
           "core_program_current": 65,
           "recharge_pct_current": 12.3,
           "graduates_current_year": 2,
-          "graduates_since_1_1_25": 13
+          "graduates_since_1_1_25": 13,
+          "cost_per_bed_day": 41.45,
+          "cost_ytd": 660145.48,
+          "cost_as_of_date": "2026-06-30"
         },
         "Bolivar": {
           "as_of_date": "2026-07-01",
@@ -242,7 +249,10 @@
           "core_program_current": 37,
           "recharge_pct_current": 5.4,
           "graduates_current_year": 6,
-          "graduates_since_1_1_25": 15
+          "graduates_since_1_1_25": 15,
+          "cost_per_bed_day": 31.42,
+          "cost_ytd": 420773.68,
+          "cost_as_of_date": "2026-06-30"
         },
         "Olive Branch": {
           "as_of_date": "2026-07-06",
@@ -283,7 +293,10 @@
           "core_program_current": 27,
           "recharge_pct_current": 7.4,
           "graduates_current_year": 6,
-          "graduates_since_1_1_25": 26
+          "graduates_since_1_1_25": 26,
+          "cost_per_bed_day": 50.58,
+          "cost_ytd": 448607.35,
+          "cost_as_of_date": "2026-06-30"
         },
         "Hardeman": {
           "as_of_date": "2026-07-06",
@@ -324,7 +337,10 @@
           "core_program_current": 11,
           "recharge_pct_current": 27.3,
           "graduates_current_year": 2,
-          "graduates_since_1_1_25": 6
+          "graduates_since_1_1_25": 6,
+          "cost_per_bed_day": 69.0,
+          "cost_ytd": 212301.6,
+          "cost_as_of_date": "2026-06-30"
         },
         "New Albany": {
           "as_of_date": "2026-07-06",
@@ -365,7 +381,10 @@
           "core_program_current": 6,
           "recharge_pct_current": 0.0,
           "graduates_current_year": 1,
-          "graduates_since_1_1_25": 4
+          "graduates_since_1_1_25": 4,
+          "cost_per_bed_day": 53.93,
+          "cost_ytd": 179813.94,
+          "cost_as_of_date": "2026-06-30"
         }
       },
       "system": {
@@ -405,7 +424,10 @@
         "core_program_current": 146,
         "recharge_pct_current": 10.3,
         "graduates_current_year": 17,
-        "graduates_since_1_1_25": 64
+        "graduates_since_1_1_25": 64,
+        "cost_per_bed_day": 43.08,
+        "cost_ytd": 1921642.05,
+        "cost_as_of_date": "2026-06-30"
       }
     }
   ]
@@ -420,6 +442,11 @@ var TAIL_RANKS = ['Graduate','Help Staff','Executive Staff'];
 function programTotal(rankCounts) {
   if (!rankCounts) return 0;
   return PROGRAM_RANKS.reduce(function(sum, r) { return sum + (rankCounts[r] || 0); }, 0);
+}
+
+function fmtMoney(v) {
+  if (v === null || v === undefined) return '&mdash;';
+  return '$' + Number(v).toFixed(2);
 }
 
 function fmtDelta(curr, prev, opts) {
@@ -480,6 +507,10 @@ function render() {
   var sys = latest.system;
   var sysWeek = week_ago ? week_ago.system : null;
   var sysMonth = month_ago ? month_ago.system : null;
+
+  var costAsOfEl = document.getElementById('cost-asof');
+  if (costAsOfEl) costAsOfEl.textContent = sys.cost_as_of_date || '—';
+
   var cards = [
     { label: 'System Occupancy', value: sys.occupancy_pct + '%', delta: fmtDelta(sys.occupancy_pct, sysWeek && sysWeek.occupancy_pct, {suffix:'pp'}) },
     { label: 'Beds Occupied', value: sys.beds_occupied + ' / ' + sys.total_beds, delta: '' },
@@ -515,6 +546,7 @@ function render() {
       '<td>' + c.recharge_pct_current + '% ' + fmtDelta(c.recharge_pct_current, wk && wk.recharge_pct_current, {suffix:'pp'}) + '</td>' +
       '<td>' + c.graduates_current_year + '</td>' +
       '<td>' + c.graduates_since_1_1_25 + '</td>' +
+      '<td class="cost-cell">' + fmtMoney(c.cost_per_bed_day) + '</td>' +
       '</tr>';
   }).join('');
   var sysRow = '<tr class="total-row">' +
@@ -532,6 +564,7 @@ function render() {
     '<td>' + sys.recharge_pct_current + '%</td>' +
     '<td>' + sys.graduates_current_year + '</td>' +
     '<td>' + sys.graduates_since_1_1_25 + '</td>' +
+    '<td class="cost-cell">' + fmtMoney(sys.cost_per_bed_day) + '</td>' +
     '</tr>';
   document.getElementById('center-tbody').innerHTML = rows + sysRow;
 
