@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+(function() {
+  var d = new Date();
+  var today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('d') !== today) {
+    params.set('d', today);
+    window.location.replace(window.location.pathname + '?' + params.toString() + window.location.hash);
+  }
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warriors Center - Arrivals &amp; Departures</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F8F9FB; color: #222222;
+  }
+  .back-link { display: inline-block; margin-bottom: 12px; color: #1B3A6B; text-decoration: none; font-size: 13px; font-weight: 600; }
+  .back-link:hover { text-decoration: underline; }
+  h1 { font-size: 20px; color: #1B3A6B; margin: 0 0 4px; }
+  .sub { color: #6E7882; font-size: 13px; margin-bottom: 20px; }
+  .week-section { background: #fff; border: 1px solid #E0E5E9; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; }
+  .week-section h2 { font-size: 16px; color: #1B3A6B; margin: 0 0 12px; }
+  .tag { font-size: 12px; font-weight: 600; color: #8a6100; background: #FBEFD9; padding: 2px 8px; border-radius: 10px; }
+  .center-block { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #EFF2F6; }
+  .center-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .center-block h3 { font-size: 14px; color: #1B3A6B; margin: 0 0 8px; }
+  .sub-label { font-size: 12px; font-weight: 600; color: #6E7882; text-transform: uppercase; letter-spacing: 0.03em; margin: 8px 0 4px; }
+  .none-note { font-size: 13px; color: #B7BEC6; font-style: italic; margin: 0 0 6px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+  thead th { background: #F8F9FB; color: #6E7882; text-align: left; padding: 6px 10px; font-size: 11px; font-weight: 600; border-bottom: 1px solid #E0E5E9; }
+  tbody td { padding: 6px 10px; font-size: 13px; border-bottom: 1px solid #F8F9FB; }
+  .footnote { font-size: 11px; color: #6E7882; margin-top: 16px; line-height: 1.5; font-style: italic; }
+</style>
+</head>
+<body>
+<a class="back-link" href="index.html">&larr; Back to Dashboard</a>
+<h1>Warriors Center &mdash; Arrivals &amp; Departures</h1>
+<div class="sub">Newest week first, every center listed every week.</div>
+
+<div class="week-section">
+  <h2>Week of 07/06/2026 <span class="tag">(in progress)</span></h2>
+  
+    <div class="center-block">
+      <h3>Memphis</h3>
+      <div class="sub-label">Arrivals (0)</div>
+      <p class="none-note">No arrivals this week.</p>
+      <div class="sub-label">Departures (2)</div>
+      <table><thead><tr><th>Name</th><th>Date</th></tr></thead><tbody><tr><td>Jamie Murray</td><td>2026-07-08</td></tr><tr><td>Justin Williard</td><td>2026-07-09</td></tr></tbody></table>
+    </div>
+    <div class="center-block">
+      <h3>Bolivar</h3>
+      <div class="sub-label">Arrivals (1)</div>
+      <table><thead><tr><th>Name</th><th>Date</th></tr></thead><tbody><tr><td>Dan Burdette</td><td>2026-07-08</td></tr></tbody></table>
+      <div class="sub-label">Departures (2)</div>
+      <table><thead><tr><th>Name</th><th>Date</th></tr></thead><tbody><tr><td>Burdette</td><td>2026-07-08</td></tr><tr><td>Jemon Beasley</td><td>2026-07-08</td></tr></tbody></table>
+    </div>
+    <div class="center-block">
+      <h3>Olive Branch</h3>
+      <p class="none-note">No activity this week.</p>
+    </div>
+    <div class="center-block">
+      <h3>Hardeman</h3>
+      <p class="none-note">No activity this week.</p>
+    </div>
+    <div class="center-block">
+      <h3>New Albany</h3>
+      <p class="none-note">No activity this week.</p>
+    </div>
+</div>
+<div class="footnote">
+  Sourced from day-over-day bed census roster comparisons (same mechanism used for rank-change and Returned-to-Bootcamp tracking elsewhere on this site), not from the raw Arrivals/Departures text printed on each center's own census file. Matching is by name only &mdash; there is no persistent resident ID system yet, so a resident transferring between centers will appear as a departure at one and an arrival at the other, not a transfer. Weeks run Monday&ndash;Sunday. Data only exists from 2026-07-07 onward; earlier weeks cannot be backfilled.
+</div>
+</body>
+</html>
