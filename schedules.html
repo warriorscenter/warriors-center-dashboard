@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+(function() {
+  var d = new Date();
+  var today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('d') !== today) {
+    params.set('d', today);
+    window.location.replace(window.location.pathname + '?' + params.toString() + window.location.hash);
+  }
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warriors Center - Daily Schedules</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #F8F9FB; color: #222222;
+  }
+  .back-link { display: inline-block; margin-bottom: 12px; color: #1B3A6B; text-decoration: none; font-size: 13px; font-weight: 600; }
+  .back-link:hover { text-decoration: underline; }
+  h1 { font-size: 20px; color: #1B3A6B; margin: 0 0 4px; }
+  .sub { color: #6E7882; font-size: 13px; margin-bottom: 4px; }
+  .generated { font-size: 12px; color: #fff; background: #1B3A6B; display: inline-block; padding: 4px 12px; border-radius: 6px; margin-bottom: 16px; font-weight: 600; }
+  .nav { margin-bottom: 24px; }
+  .nav a {
+    display: inline-block; margin: 0 8px 8px 0; padding: 6px 14px; background: #fff;
+    border: 1px solid #E0E5E9; border-radius: 16px; color: #1B3A6B; text-decoration: none; font-size: 13px; font-weight: 600;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .center-card { background: #fff; border: 1px solid #E0E5E9; border-radius: 10px; padding: 14px; scroll-margin-top: 16px; }
+  .card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .card-header h2 { font-size: 17px; color: #1B3A6B; margin: 0; }
+  .badge { font-size: 11px; font-weight: 700; color: #fff; background: #2E7D32; padding: 2px 9px; border-radius: 10px; }
+  .badge-stale { background: #B58900; }
+  .badge-warn { background: #C0392B; }
+  .card-meta { font-size: 12px; color: #6E7882; margin-bottom: 10px; }
+  .sched-img { width: 100%; height: auto; border: 1px solid #E0E5E9; border-radius: 6px; display: block; }
+  .empty-state { font-size: 13px; color: #6E7882; padding: 20px 8px; text-align: center; line-height: 1.6; }
+  .empty-state a { color: #1B3A6B; font-weight: 600; }
+  .footnote { font-size: 11px; color: #6E7882; margin-top: 20px; line-height: 1.5; font-style: italic; }
+</style>
+</head>
+<body>
+<a class="back-link" href="index.html">&larr; Back to Dashboard</a>
+<h1>Warriors Center &mdash; Daily Schedules</h1>
+<div class="sub">Each center's most recently posted crew/duty schedule. Click an image to open the full PDF.</div>
+<div class="generated">Page generated July 13, 2026</div>
+<div class="nav"><a href="#Memphis">Memphis</a><a href="#Bolivar">Bolivar</a><a href="#OliveBranch">Olive Branch</a><a href="#Hardeman">Hardeman</a></div>
+<div class="grid">
+
+<div class="center-card" id="Memphis">
+  <div class="card-header">
+    <h2>Memphis</h2>
+    <span class="badge">2026-07-13</span>
+  </div>
+  <div class="card-meta">Monday, July 13, 2026 &middot; pre-built for an upcoming day (normal, e.g. weekend prep)</div>
+  <a href="https://warriorscenter.sharepoint.com/Shared Documents/Memphis/Schedules/2026/2026.07/Schedule_Memphis_2026.07.13.pdf" target="_blank" rel="noopener">
+    <img class="sched-img" src="schedule_Memphis.jpg" alt="Memphis schedule, Monday, July 13, 2026">
+  </a>
+</div>
+
+<div class="center-card" id="Bolivar">
+  <div class="card-header">
+    <h2>Bolivar</h2>
+    <span class="badge">2026-07-13</span>
+  </div>
+  <div class="card-meta">Monday, July 13, 2026 &middot; pre-built for an upcoming day (normal, e.g. weekend prep)</div>
+  <a href="https://warriorscenter.sharepoint.com/Shared Documents/Bolivar/Schedules/2026/2026.07/Schedule_Bolivar_2026.07.13.pdf" target="_blank" rel="noopener">
+    <img class="sched-img" src="schedule_Bolivar.jpg" alt="Bolivar schedule, Monday, July 13, 2026">
+  </a>
+</div>
+
+<div class="center-card" id="OliveBranch">
+  <div class="card-header">
+    <h2>Olive Branch</h2>
+    <span class="badge">2026-07-13</span>
+  </div>
+  <div class="card-meta">Monday, July 13, 2026 &middot; pre-built for an upcoming day (normal, e.g. weekend prep)</div>
+  <a href="https://warriorscenter.sharepoint.com/Shared Documents/Olive Branch/Schedules/2026/2026.07/Schedule_OB_2026.07.13.pdf" target="_blank" rel="noopener">
+    <img class="sched-img" src="schedule_OliveBranch.jpg" alt="Olive Branch schedule, Monday, July 13, 2026">
+  </a>
+</div>
+
+<div class="center-card" id="Hardeman">
+  <div class="card-header">
+    <h2>Hardeman</h2>
+    <span class="badge">2026-07-13</span>
+  </div>
+  <div class="card-meta">Monday, July 13, 2026 &middot; pre-built for an upcoming day (normal, e.g. weekend prep)</div>
+  <a href="https://warriorscenter.sharepoint.com/Shared Documents/Hardeman/Schedules/2026/2026.07/Schedule_Hardeman_2026.07.13.pdf" target="_blank" rel="noopener">
+    <img class="sched-img" src="schedule_Hardeman.jpg" alt="Hardeman schedule, Monday, July 13, 2026">
+  </a>
+</div>
+
+</div>
+<div class="footnote">
+  This shows the latest schedule on file for each center - not a weekly view. New Albany is not included (it does not produce this document). Schedules are typically posted same-day and are occasionally posted a day ahead (e.g. over a weekend) - a date shown here that's one day in the future is expected, not an error. Click any schedule image to open the original PDF on SharePoint.
+</div>
+</body>
+</html>
